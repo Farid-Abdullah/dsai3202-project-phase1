@@ -1,0 +1,6 @@
+RETRY PROOF: PASS
+receipts identical (name, bytes, ETag, last-modified) after a second ingestion
+Number of File Transfers Completed: 0
+Number of File Transfers Skipped: 1
+Number of File Transfers Completed: 0
+Number of File Transfers Skipped: 1

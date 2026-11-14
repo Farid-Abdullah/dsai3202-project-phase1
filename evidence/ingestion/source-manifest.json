@@ -1,0 +1,38 @@
+{
+  "dataset": "eCommerce behavior data from multi category store (REES46 Open CDP)",
+  "kaggle_dataset": "mkechinov/ecommerce-behavior-data-from-multi-category-store",
+  "source_url": "https://www.kaggle.com/datasets/mkechinov/ecommerce-behavior-data-from-multi-category-store",
+  "license_note": "free to use with credit to Kaggle page and REES46",
+  "file": {
+    "name": "2019-Nov.csv",
+    "bytes": 9006762395,
+    "sha256": "addd9a27ed99abdece368019ebfba19568972c7fcbe949db3484aab8a3bcffec",
+    "lines_including_header": 67501980,
+    "data_rows": 67501979,
+    "header": [
+      "event_time",
+      "event_type",
+      "product_id",
+      "category_id",
+      "category_code",
+      "brand",
+      "price",
+      "user_id",
+      "user_session"
+    ]
+  },
+  "kaggle_listing_for_file": {
+    "name": "2019-Nov.csv",
+    "size": "9006762395",
+    "creationDate": "2019-12-09 20:52:13.431000"
+  },
+  "transport_archives": [
+    {
+      "name": "2019-Nov.csv.zip",
+      "bytes": 2874125107,
+      "sha256": "97509ac4d0f1644641b2200cf6cee0eba0f230581b1448c411c7beaaa2e17107"
+    }
+  ],
+  "downloaded_utc": "2026-11-14T11:26:59Z",
+  "manifest_created_utc": "2026-11-14T11:28:58Z"
+}

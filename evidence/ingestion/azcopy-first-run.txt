@@ -1,0 +1,52 @@
+
+Job db2e9cc0-867b-d94e-685c-eb9a236aaa08 has started
+Log file is located at: /home/azureuser/.azcopy/db2e9cc0-867b-d94e-685c-eb9a236aaa08.log
+
+
+
+
+Job db2e9cc0-867b-d94e-685c-eb9a236aaa08 summary
+Elapsed Time (Minutes): 0.7002
+Number of File Transfers: 1
+Number of Folder Property Transfers: 0
+Number of Symlink Transfers: 0
+Total Number of Transfers: 1
+Number of File Transfers Completed: 1
+Number of Folder Transfers Completed: 0
+Number of File Transfers Failed: 0
+Number of Folder Transfers Failed: 0
+Number of File Transfers Skipped: 0
+Number of Folder Transfers Skipped: 0
+Number of Symbolic Links Skipped: 0
+Number of Hardlinks Converted: 0
+Number of Hardlinks Skipped: 0
+Number of Special Files Skipped: 0
+Total Number of Bytes Transferred: 9006762395
+Final Job Status: Completed
+
+
+Job 8331512e-41f8-8b4b-656a-83795598b49e has started
+Log file is located at: /home/azureuser/.azcopy/8331512e-41f8-8b4b-656a-83795598b49e.log
+
+
+
+
+Job 8331512e-41f8-8b4b-656a-83795598b49e summary
+Elapsed Time (Minutes): 0.0334
+Number of File Transfers: 1
+Number of Folder Property Transfers: 0
+Number of Symlink Transfers: 0
+Total Number of Transfers: 1
+Number of File Transfers Completed: 1
+Number of Folder Transfers Completed: 0
+Number of File Transfers Failed: 0
+Number of Folder Transfers Failed: 0
+Number of File Transfers Skipped: 0
+Number of Folder Transfers Skipped: 0
+Number of Symbolic Links Skipped: 0
+Number of Hardlinks Converted: 0
+Number of Hardlinks Skipped: 0
+Number of Special Files Skipped: 0
+Total Number of Bytes Transferred: 1184
+Final Job Status: Completed
+

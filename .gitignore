@@ -1,0 +1,3 @@
+evidence/ingestion/*.log
+__pycache__/
+.kaggle/
