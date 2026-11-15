@@ -1,0 +1,26 @@
+{
+  "run_id": "497911063048649",
+  "silver_table": "dsai3202_databricks.s_60304642.project_silver_events",
+  "silver_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/silver_events",
+  "silver_version": 14,
+  "silver_fingerprint": {
+    "rows": 67401450,
+    "hash_sum": "119548456377832550261777"
+  },
+  "features_table": "dsai3202_databricks.s_60304642.project_features_v1",
+  "features_path": "abfss://curated@amazonlake60304642.dfs.core.windows.net/project/features_v1",
+  "features_version": 2,
+  "feature_set_version": 1,
+  "features_fingerprint": {
+    "rows": 2053770,
+    "hash_sum": "15462745383628156087548"
+  },
+  "label_counts": {
+    "1": 713140,
+    "0": 1340630
+  },
+  "positive_rate": 0.3472345978371483,
+  "purchase_pairs": 857884,
+  "purchase_pairs_without_prior_cart": 144744,
+  "finished_utc": "2026-11-14T12:57:52.245044Z"
+}

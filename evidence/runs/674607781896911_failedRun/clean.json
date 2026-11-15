@@ -1,0 +1,23 @@
+{
+  "run_id": "674607781896911",
+  "input": "test_bad",
+  "input_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/test_inputs/bad_v1/events.csv",
+  "manifest_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/test_inputs/bad_v1/manifest.json",
+  "rows_read": 50000,
+  "accepted": 47488,
+  "invalid": 2500,
+  "duplicate_copies": 12,
+  "duplicate_groups": 11,
+  "reject_counts": {
+    "bad_price": 500,
+    "malformed_row": 500,
+    "missing_key": 500,
+    "bad_event_type": 500,
+    "bad_timestamp": 500
+  },
+  "balanced": true,
+  "staging_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/runs/run_id=674607781896911/silver_staging",
+  "rejects_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/runs/run_id=674607781896911/rejects",
+  "duplicates_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/runs/run_id=674607781896911/duplicate_groups",
+  "finished_utc": "2026-11-14T13:33:17.326774Z"
+}

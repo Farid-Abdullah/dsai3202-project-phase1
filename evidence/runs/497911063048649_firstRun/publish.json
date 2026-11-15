@@ -1,0 +1,12 @@
+{
+  "run_id": "497911063048649",
+  "silver_table": "dsai3202_databricks.s_60304642.project_silver_events",
+  "silver_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/silver_events",
+  "silver_version": 14,
+  "silver_fingerprint": {
+    "rows": 67401450,
+    "hash_sum": "119548456377832550261777"
+  },
+  "expected_rows": 67401450,
+  "finished_utc": "2026-11-14T12:55:34.859426Z"
+}

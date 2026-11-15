@@ -1,0 +1,34 @@
+{
+  "run_id": "926454798811512",
+  "compare_to": "497911063048649",
+  "silver_same": true,
+  "features_same": true,
+  "silver_versions": [
+    14,
+    29
+  ],
+  "features_versions": [
+    2,
+    5
+  ],
+  "baseline": {
+    "silver": {
+      "rows": 67401450,
+      "hash_sum": "119548456377832550261777"
+    },
+    "features": {
+      "rows": 2053770,
+      "hash_sum": "15462745383628156087548"
+    }
+  },
+  "this_run": {
+    "silver": {
+      "rows": 67401450,
+      "hash_sum": "119548456377832550261777"
+    },
+    "features": {
+      "rows": 2053770,
+      "hash_sum": "15462745383628156087548"
+    }
+  }
+}

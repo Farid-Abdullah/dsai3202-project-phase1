@@ -1,0 +1,88 @@
+{
+  "run_id": "674607781896911",
+  "input": "test_bad",
+  "passed": false,
+  "failed_rules": [
+    "reject_rate"
+  ],
+  "warnings": [],
+  "checks": [
+    {
+      "rule": "balanced",
+      "policy": "FAIL",
+      "ok": true,
+      "detail": "50000 = 47488 + 2500 + 12"
+    },
+    {
+      "rule": "complete",
+      "policy": "FAIL",
+      "ok": true,
+      "detail": "read 50000, manifest says 50000"
+    },
+    {
+      "rule": "reject_rate",
+      "policy": "FAIL",
+      "ok": false,
+      "detail": "5.0000% (limit 1%)"
+    },
+    {
+      "rule": "event_types",
+      "policy": "FAIL",
+      "ok": true,
+      "detail": "{'purchase': 540, 'view': 46509, 'cart': 439}"
+    },
+    {
+      "rule": "time_window",
+      "policy": "FAIL",
+      "ok": true,
+      "detail": "2019-11-01 00:00:00 .. 2019-11-01 02:48:26"
+    },
+    {
+      "rule": "keys_not_null",
+      "policy": "FAIL",
+      "ok": true,
+      "detail": "0 rows"
+    },
+    {
+      "rule": "category_missing",
+      "policy": "WARN",
+      "ok": true,
+      "detail": "34.05%"
+    },
+    {
+      "rule": "brand_missing",
+      "policy": "WARN",
+      "ok": true,
+      "detail": "16.21%"
+    },
+    {
+      "rule": "price_zero_share",
+      "policy": "WARN",
+      "ok": true,
+      "detail": "34 rows (0.0716%)"
+    }
+  ],
+  "profile": {
+    "min_ts": "2019-11-01 00:00:00",
+    "max_ts": "2019-11-01 02:48:26",
+    "category_missing": 16172,
+    "brand_missing": 7700,
+    "price_zero": 34,
+    "null_keys": 0,
+    "users": 10352,
+    "products": 13252,
+    "sessions_approx": 12451,
+    "event_types": {
+      "purchase": 540,
+      "view": 46509,
+      "cart": 439
+    },
+    "accepted_rows": 47488
+  },
+  "policy": {
+    "max_reject_rate": 0.01,
+    "max_category_missing": 0.4,
+    "max_brand_missing": 0.2
+  },
+  "finished_utc": "2026-11-14T13:33:44.407158Z"
+}

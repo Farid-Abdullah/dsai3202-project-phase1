@@ -1,0 +1,19 @@
+{
+  "run_id": "497911063048649",
+  "input": "full",
+  "input_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/landing/rees46/2019-Nov/sha256=addd9a27ed99/2019-Nov.csv",
+  "manifest_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/landing/rees46/2019-Nov/sha256=addd9a27ed99/_manifest/source-manifest.json",
+  "rows_read": 67501979,
+  "accepted": 67401450,
+  "invalid": 10,
+  "duplicate_copies": 100519,
+  "duplicate_groups": 57553,
+  "reject_counts": {
+    "missing_key": 10
+  },
+  "balanced": true,
+  "staging_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/runs/run_id=497911063048649/silver_staging",
+  "rejects_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/runs/run_id=497911063048649/rejects",
+  "duplicates_path": "abfss://processed@amazonlake60304642.dfs.core.windows.net/project/runs/run_id=497911063048649/duplicate_groups",
+  "finished_utc": "2026-11-14T12:52:56.276525Z"
+}
