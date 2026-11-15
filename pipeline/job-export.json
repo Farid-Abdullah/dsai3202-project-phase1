@@ -89,7 +89,7 @@
     },
     {
       "name": "input",
-      "default": "test_bad"
+      "default": "full"
     },
     {
       "name": "lake",
