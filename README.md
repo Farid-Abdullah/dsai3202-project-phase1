@@ -16,9 +16,9 @@ DSAI3202 Cloud Computing, Fall 2026 · Farid Abdul Rehman (60304642) · Instruct
 - **Raw version and source receipt:** `raw/rees46/2019-Nov/sha256=addd9a27ed99/2019-Nov.csv`, SHA-256 `addd9a27ed99abdece368019ebfba19568972c7fcbe949db3484aab8a3bcffec`, downloaded 2026-11-14 11:26 UTC. Manifest: [`evidence/ingestion/source-manifest.json`](evidence/ingestion/source-manifest.json) (bytes, hash, row count, header, Kaggle listing, transport-archive hash). The folder name is derived from the content hash, so the same file always lands in the same place and a new version gets a new folder.
 - **Upload verified:** the Azure copy was streamed back and re-hashed: same 9,006,762,395 bytes and same SHA-256 ([`raw-verify.json`](evidence/ingestion/raw-verify.json)).
 - **Repeat-ingestion evidence:** the second run skipped the file (`Number of File Transfers Skipped: 1`, `Completed: 0`), and the before/after receipts (name, bytes, ETag, last-modified) are identical: [`receipts-before.tsv`](evidence/ingestion/receipts-before.tsv), [`receipts-after.tsv`](evidence/ingestion/receipts-after.tsv), [`retry-proof.txt`](evidence/ingestion/retry-proof.txt) → `RETRY PROOF: PASS`.
-- **Storage layout:** raw version → landing copy → per-run bronze/rejects/staging → published silver (`project_silver_events`) → feature snapshot (`project_features_v1`). Full tree: [`docs/DATA_CONTRACT.md`](docs/DATA_CONTRACT.md#storage-layout-lake-amazonlake60304642-separate-from-the-lab-data). All project data sits under `rees46/` and `project/` prefixes, separate from the course-lab data in the same lake.
-- **Schema, keys and assumptions:** [data contract](docs/DATA_CONTRACT.md).
-- **Catalog and lineage:** two Unity Catalog external Delta tables with table/column comments and version properties; lineage from Kaggle archive hash to feature version in [`docs/DATA_CONTRACT.md#lineage`](docs/DATA_CONTRACT.md#lineage). Screenshots (Catalog Explorer overview and lineage, job runs): [`evidence/screenshots/`](evidence/screenshots/).
+- **Storage layout:** raw version → landing copy → per-run bronze/rejects/staging → published silver (`project_silver_events`) → feature snapshot (`project_features_v1`). Full tree: [`docs/Data_contract.md`](docs/Data_contract.md#storage-layout-lake-amazonlake60304642). All project data sits under `rees46/` and `project/` prefixes, separate from the course-lab data in the same lake.
+- **Schema, keys and assumptions:** [data contract](docs/Data_contract.md).
+- **Catalog and lineage:** two Unity Catalog external Delta tables with table/column comments and version properties; lineage from Kaggle archive hash to feature version in [`docs/Data_contract.md#lineage`](docs/Data_contract.md#lineage). Screenshots (Catalog Explorer overview and lineage, job runs): [`evidence/screenshots/`](evidence/screenshots/).
 
 
 | Service | Role |
@@ -44,7 +44,7 @@ DSAI3202 Cloud Computing, Fall 2026 · Farid Abdul Rehman (60304642) · Instruct
    bash ingest/ingest.sh all                   # preflight, download, extract, manifest, upload, verify, retry, landing
    ```
    Each step can also run alone (`bash ingest/ingest.sh verify`) and is safe to repeat. Evidence goes to `evidence/ingestion/`.
-4. **Import and configure the job (Databricks):** import `pipeline/*.py` into one workspace folder (e.g. `project/`). Create a job with four notebook tasks `clean → validate → publish → features`, each `depends on` the previous one with `Run if = All succeeded`, 0 retries, on one existing cluster, max concurrent runs 1, no schedule. Template: [`pipeline/job.template.json`](pipeline/job.template.json); actual job export (if present): [`evidence/job-export.json`](evidence/job-export.json).
+4. **Import and configure the job (Databricks):** import `pipeline/*.py` into one workspace folder (e.g. `project/`). Create a job with four notebook tasks `clean → validate → publish → features`, each `depends on` the previous one with `Run if = All succeeded`, 0 retries, on one existing cluster, max concurrent runs 1, no schedule. Template: [`pipeline/job-export.json`](pipeline/job-export.json); actual job export (if present): [`evidence/job-export.json`](pipeline/job-export.json).
 
    | Parameter | Value | Meaning |
    |---|---|---|
@@ -83,7 +83,7 @@ DSAI3202 Cloud Computing, Fall 2026 · Farid Abdul Rehman (60304642) · Instruct
   | zero prices | WARN (counted) | kept; studied in EDA |
   | invalid rows | QUARANTINE | saved with reason in the run's `rejects/`, never published |
 
-- **EDA** (full population of published silver v29 / features v5, no sampling; notebook export [`evidence/06_eda.html`](evidence/06_eda.html), numbers [`evidence/eda_summary.json`](evidence/eda_summary.json), plots in [`evidence/eda/`](evidence/eda/)):
+- **EDA** (full population of published silver v29 / features v5, no sampling; notebook export [`evidence/eda/06_eda.html`](evidence/eda/06_eda.html), numbers [`evidence/eda/eda_summary.json`](evidence/eda/eda_summary.json), plots in [`evidence/eda/`](evidence/eda/)):
   - **Population:** 67,401,450 events, 3,696,117 users, 13,776,050 sessions, 190,662 products, 14 top-level categories, 4,201 brands; 63,554,512 views (94.3%), 2,930,008 carts (4.3%), 916,930 purchases (1.4%).
   - **Missing values:** only `category_code` (32.4%) and `brand` (13.7%); all key, time and price fields complete after cleaning.
   - **Price:** median 165.77, IQR 69.24–360.37, p99 1,661.12, max 2,574.07 (the maximum looks like a cap in the source); 187,987 zero-price events (0.28%) kept and flagged. Log-price is roughly bell-shaped ([plot](evidence/eda/price_distribution.png)).
@@ -96,10 +96,10 @@ DSAI3202 Cloud Computing, Fall 2026 · Farid Abdul Rehman (60304642) · Instruct
   2. **The strong `weekday` correlation is mostly this artefact** (14–16 Nov are Thursday–Saturday); it will be re-checked after the exclusion and dropped if it does not hold.
   3. **Cart-logging step on 8 Nov** shifts the base rate (~0.52 → ~0.43). The time-ordered split keeps this out of the test window; the product-rate baseline is fit on the training period only.
   4. **Heavy users:** the top 0.1% of users are kept for now; Phase 2 compares results with and without them. Class balance (34.7% positive) is moderate, so ROC-AUC plus PR-AUC remain appropriate; nulls in the two rate features need imputation or a missing indicator fit on training data. The Phase-0 test claim about Black Friday still holds as a test-day check, but the main sale in this data is 15–17 Nov.
-- **Features:** 18 features in four groups (cart context, session-so-far, user history, product history), all computed from events strictly before the cart. Full table with type, definition, availability and missing-value policy: [`docs/FEATURES.md`](docs/FEATURES.md). Feature rows: **2,053,770** (one per session-product first cart), **713,140 purchased (34.7%)**, 1,340,630 not purchased. Purchases without an earlier cart of the same product in the session (excluded from the target): **144,744 of 857,884** purchase pairs (16.9%).
+- **Features:** 18 features in four groups (cart context, session-so-far, user history, product history), all computed from events strictly before the cart. Full table with type, definition, availability and missing-value policy: [`docs/Features.md`](docs/Features.md). Feature rows: **2,053,770** (one per session-product first cart), **713,140 purchased (34.7%)**, 1,340,630 not purchased. Purchases without an earlier cart of the same product in the session (excluded from the target): **144,744 of 857,884** purchase pairs (16.9%).
 - **Version numbers:** Delta counts metadata commits too. In each publish the data write is one commit, followed by the table/column comments and properties (13 commits for silver, 2 for features), so run 1 ends at silver v14 and features v2. Each run records the final version it read and wrote in `success.json`.
 - **Saved feature version:** Delta table `dsai3202_databricks.s_60304642.project_features_v1` at `curated/project/features_v1`, property `project.feature_version = 1`, Delta version recorded per run in `success.json`; reproducible from `pipeline/04_features.py` + the silver version.
-- **Leakage risks and planned split:** see [`docs/FEATURES.md#leakage-risks-and-how-they-are-handled`](docs/FEATURES.md#leakage-risks-and-how-they-are-handled). Phase 2 splits by `cart_date` in time order and fits all learned preprocessing on the training period only.
+- **Leakage risks and planned split:** see [`docs/Features.md#leakage-risks-and-how-they-are-handled`](docs/Features.md#leakage-risks-and-how-they-are-handled). Phase 2 splits by `cart_date` in time order and fits all learned preprocessing on the training period only.
 
 ## Resource use and contributions
 
@@ -113,4 +113,4 @@ DSAI3202 Cloud Computing, Fall 2026 · Farid Abdul Rehman (60304642) · Instruct
 
 ## AI use
 
-pending
+Tool: Claude (Anthropic). Full record of my requests, the responses and what I did with each: [evidence/AI_Use_Record_Phase1.pdf](evidence/AI_Use_Record_Phase1.pdf)
