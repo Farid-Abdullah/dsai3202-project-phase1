@@ -1,3 +1,4 @@
 evidence/ingestion/*.log
 __pycache__/
 .kaggle/
+.DS_Store
