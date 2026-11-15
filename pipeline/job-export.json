@@ -1,0 +1,111 @@
+{
+  "name": "dsai3202-project-60304642",
+  "email_notifications": {
+    "no_alert_for_skipped_runs": false
+  },
+  "webhook_notifications": {},
+  "timeout_seconds": 0,
+  "max_concurrent_runs": 1,
+  "tasks": [
+    {
+      "task_key": "clean",
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/60304642@udst.edu.qa/project/01_clean",
+        "source": "WORKSPACE"
+      },
+      "existing_cluster_id": "1114-100955-9kp9o534",
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {},
+      "disabled": false
+    },
+    {
+      "task_key": "validate",
+      "depends_on": [
+        {
+          "task_key": "clean"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/60304642@udst.edu.qa/project/02_validate",
+        "source": "WORKSPACE"
+      },
+      "existing_cluster_id": "1114-100955-9kp9o534",
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {},
+      "disabled": false
+    },
+    {
+      "task_key": "publish",
+      "depends_on": [
+        {
+          "task_key": "validate"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/60304642@udst.edu.qa/project/03_publish",
+        "source": "WORKSPACE"
+      },
+      "existing_cluster_id": "1114-100955-9kp9o534",
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {},
+      "disabled": false
+    },
+    {
+      "task_key": "features",
+      "depends_on": [
+        {
+          "task_key": "publish"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/60304642@udst.edu.qa/project/04_features",
+        "source": "WORKSPACE"
+      },
+      "existing_cluster_id": "1114-100955-9kp9o534",
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {},
+      "disabled": false
+    }
+  ],
+  "queue": {
+    "enabled": true
+  },
+  "parameters": [
+    {
+      "name": "catalog",
+      "default": "dsai3202_databricks"
+    },
+    {
+      "name": "compare_to",
+      "default": ""
+    },
+    {
+      "name": "input",
+      "default": "test_bad"
+    },
+    {
+      "name": "lake",
+      "default": "amazonlake60304642"
+    },
+    {
+      "name": "run_id",
+      "default": "{{job.run_id}}"
+    },
+    {
+      "name": "schema",
+      "default": "s_60304642"
+    },
+    {
+      "name": "source_container",
+      "default": "processed"
+    }
+  ]
+}
