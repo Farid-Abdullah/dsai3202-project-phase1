@@ -20,6 +20,21 @@ DSAI3202 Cloud Computing, Fall 2026 · Farid Abdul Rehman (60304642) · Instruct
 - **Schema, keys and assumptions:** [data contract](docs/Data_contract.md).
 - **Catalog and lineage:** two Unity Catalog external Delta tables with table/column comments and version properties; lineage from Kaggle archive hash to feature version in [`docs/Data_contract.md#lineage`](docs/Data_contract.md#lineage). Screenshots (Catalog Explorer overview and lineage, job runs): [`evidence/screenshots/`](evidence/screenshots/).
 
+```mermaid
+flowchart LR
+  K[Kaggle<br/>2019-Nov.csv.zip] -->|kaggle CLI| VM[Azure VM<br/>ingest.sh: extract,<br/>SHA-256, manifest]
+  VM -->|AzCopy --overwrite=false| RAW[(ADLS Gen2<br/>raw/rees46/2019-Nov/sha256=…)]
+  VM -->|AzCopy, hash-verified| LAND[(ADLS Gen2<br/>processed/project/landing)]
+  LAND --> C
+  subgraph J[Azure Databricks · Lakeflow Job · one cluster]
+    C[01_clean] --> V[02_validate<br/>quality gate] --> P[03_publish] --> F[04_features]
+  end
+  C --> RUN[(processed/project/runs/run_id=…<br/>bronze, rejects, staging)]
+  P --> S[(project_silver_events<br/>Delta · Unity Catalog)]
+  F --> FT[(project_features_v1<br/>Delta · Unity Catalog)]
+  V --> Q[(curated/project/quality<br/>gate / success / comparison JSON)]
+  F --> Q
+```
 
 | Service | Role |
 |---|---|
