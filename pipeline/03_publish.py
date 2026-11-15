@@ -23,9 +23,7 @@ if P["input"] != "full":
 clean = read_json(f"{REPORTS}/clean.json")
 
 staged = spark.read.format("delta").load(STAGING)
-(staged.write.format("delta").mode("overwrite").option("overwriteSchema", "true")
-       .partitionBy("event_date").save(SILVER_PATH))
-spark.sql(f"CREATE TABLE IF NOT EXISTS {SILVER_TABLE} USING DELTA LOCATION '{SILVER_PATH}'")
+publish_table(staged, SILVER_TABLE, SILVER_PATH, partition="event_date")
 
 # COMMAND ----------
 

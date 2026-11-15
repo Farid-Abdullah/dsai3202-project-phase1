@@ -50,7 +50,7 @@ reason = (F.when(F.col("_corrupt").isNotNull(), "malformed_row")
   .when(F.col("price_d").isNull() | (F.col("price_d") < 0), "bad_price"))
 # Scan the 9 GB CSV exactly once: save every row with its verdict as run-scoped Parquet ("bronze").
 BRONZE = f"{RUN_DIR}/bronze_checked"
-typed.withColumn("reject_reason", reason).write.mode("errorifexists").parquet(BRONZE)
+typed.withColumn("reject_reason", reason).write.mode("error").parquet(BRONZE)
 checked = spark.read.parquet(BRONZE)
 
 # COMMAND ----------
@@ -58,7 +58,7 @@ checked = spark.read.parquet(BRONZE)
 # Rejected rows: original text values + reason, saved for inspection (row-level quarantine).
 (checked.filter(F.col("reject_reason").isNotNull())
    .select("reject_reason", *COLS, "_corrupt", "_source_file")
-   .write.mode("errorifexists").parquet(REJECTS))
+   .write.mode("error").parquet(REJECTS))
 rejects = spark.read.parquet(REJECTS)
 reject_counts = {r["reject_reason"]: r["count"] for r in rejects.groupBy("reject_reason").count().collect()}
 invalid = sum(reject_counts.values())
@@ -72,13 +72,13 @@ valid = (checked.filter(F.col("reject_reason").isNull())
 
 # One shuffle does both jobs: group identical events, keep one, count the extra copies.
 grouped = valid.groupBy(*COLS).agg(F.count(F.lit(1)).alias("_copies"))
-(grouped.filter("_copies > 1").write.mode("errorifexists").parquet(DUPLICATES))
+(grouped.filter("_copies > 1").write.mode("error").parquet(DUPLICATES))
 
 silver = (grouped.drop("_copies")
   .withColumn("event_date", F.to_date("event_time"))
   .withColumn("category_l1", F.coalesce(F.split("category_code", r"\.").getItem(0), F.lit("unknown")))
   .withColumn("brand_clean", F.coalesce("brand", F.lit("unknown"))))
-(silver.write.format("delta").mode("errorifexists").partitionBy("event_date").save(STAGING))
+(silver.write.format("delta").mode("error").partitionBy("event_date").save(STAGING))
 
 # COMMAND ----------
 

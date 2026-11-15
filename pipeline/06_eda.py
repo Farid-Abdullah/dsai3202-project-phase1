@@ -14,8 +14,8 @@
 
 import matplotlib.pyplot as plt
 latest = read_json(LATEST)
-silver = spark.read.format("delta").option("versionAsOf", latest["silver_version"]).load(SILVER_PATH)
-feat = spark.read.format("delta").option("versionAsOf", latest["features_version"]).load(FEATURES_PATH)
+silver = table_version(SILVER_TABLE, latest["silver_version"])
+feat = table_version(FEATURES_TABLE, latest["features_version"])
 print("silver version", latest["silver_version"], "| features version", latest["features_version"], "| run", latest["run_id"])
 S = {"run_id": latest["run_id"], "silver_version": latest["silver_version"], "features_version": latest["features_version"]}
 

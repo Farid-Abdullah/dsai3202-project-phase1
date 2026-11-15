@@ -78,6 +78,7 @@ def exists(path):
         raise
 
 def write_json(path, obj):
+    dbutils.fs.mkdirs(path.rsplit("/", 1)[0])
     dbutils.fs.put(path, json.dumps(obj, indent=2, default=str), overwrite=True)
     print(f"saved {path}")
 
@@ -91,6 +92,25 @@ def fingerprint(df, cols=None):
     r = df.select(F.count(F.lit(1)).alias("rows"),
                   F.sum(F.xxhash64(*[F.col(c) for c in sorted(cols)]).cast("decimal(38,0)")).alias("hash_sum")).first()
     return {"rows": int(r["rows"]), "hash_sum": str(r["hash_sum"])}
+
+def publish_table(df, name, path, partition=None):
+    """Full rebuild of a registered external Delta table - same pattern as Lab-6 03_publish step 6.
+    First run: write the files and register the table in one step (mode "error" refuses a non-empty folder).
+    Later runs: check location + schema, then replace the contents with insertInto(overwrite) (atomic, keeps history)."""
+    if spark.catalog.tableExists(name):
+        detail = spark.sql(f"DESCRIBE DETAIL {name}").first()
+        if detail["location"].rstrip("/") != path.rstrip("/"):
+            raise RuntimeError(f"{name} points to {detail['location']}, expected {path}")
+        existing = spark.table(name)
+        if existing.schema.simpleString() != df.select(*existing.columns).schema.simpleString():
+            raise RuntimeError(f"Schema changed for {name}")
+        df.select(*existing.columns).write.mode("overwrite").insertInto(name)
+    else:
+        w = df.write.format("delta").mode("error").option("path", path)
+        (w.partitionBy(partition) if partition else w).saveAsTable(name)
+
+def table_version(name, version):
+    return spark.sql(f"SELECT * FROM {name} VERSION AS OF {int(version)}")
 
 def require_new_run_dir():
     if exists(REPORTS) or exists(RUN_DIR):

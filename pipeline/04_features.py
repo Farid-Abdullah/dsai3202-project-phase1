@@ -19,7 +19,7 @@
 # COMMAND ----------
 
 publish = read_json(f"{REPORTS}/publish.json")      # exists only if 03_publish succeeded for this run
-silver = spark.read.format("delta").option("versionAsOf", publish["silver_version"]).load(SILVER_PATH)
+silver = table_version(SILVER_TABLE, publish["silver_version"])
 
 order_code = F.when(F.col("event_type") == "view", 0).when(F.col("event_type") == "cart", 1).otherwise(2)
 ev = (silver.select("event_time", "event_type", "product_id", "user_id", "user_session", "price",
@@ -103,8 +103,7 @@ feat = (carts.join(prod, ["user_session", "product_id"], "left")
       .alias("product_prior_conv_rate"),
     "purchased"))
 
-(feat.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(FEATURES_PATH))
-spark.sql(f"CREATE TABLE IF NOT EXISTS {FEATURES_TABLE} USING DELTA LOCATION '{FEATURES_PATH}'")
+publish_table(feat, FEATURES_TABLE, FEATURES_PATH)
 spark.sql(f"ALTER TABLE {FEATURES_TABLE} SET TBLPROPERTIES ('project.feature_version'='{FEATURE_VERSION}', "
           f"'project.silver_version'='{publish['silver_version']}', 'project.last_run_id'='{RUN_ID}')")
 spark.sql(f"""COMMENT ON TABLE {FEATURES_TABLE} IS
